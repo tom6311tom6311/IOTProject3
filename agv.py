@@ -7,7 +7,7 @@ import atexit
 
 device_name = '/dev/ttyACM0'
 imgs_dir = 'imgs'
-motor_delta = 0.05
+motor_delta = 0.1
 sub_ps = []
 
 subp_capture_imgs = subprocess.Popen(['python', 'capture_imgs.py', imgs_dir])
@@ -30,7 +30,7 @@ else:
 
 ser = serial.Serial(device_name, 9600)
 
-motor_speed = [0.0, 0.0]
+motor_speed = [30.0, 35.0]
 
 while 1:
   raw_input = ser.readline().replace('\r', '').replace('\n', '')
@@ -38,11 +38,11 @@ while 1:
     [front_sonar_dist, left_sonar_dist, angle] = [float(i) for i in raw_input.split(' ')]
     print(left_sonar_dist)
     if (left_sonar_dist > 40 or left_sonar_dist == 0):
-      motor_speed[0] = (motor_speed[0] + motor_delta) % 255
-      motor_speed[1] = (motor_speed[1] - motor_delta) % 255
+      motor_speed[0] = (motor_speed[0] - motor_delta) % 50
+      motor_speed[1] = (motor_speed[1] + motor_delta) % 50
     else:
-      motor_speed[0] = (motor_speed[0] - motor_delta) % 255
-      motor_speed[1] = (motor_speed[1] + motor_delta) % 255
+      motor_speed[0] = (motor_speed[0] + motor_delta) % 50
+      motor_speed[1] = (motor_speed[1] - motor_delta) % 50
 
     ser.write(''.join([str(int(speed)).zfill(3) for speed in motor_speed]))
     print('Sent: ' + ''.join([str(int(speed)).zfill(3) for speed in motor_speed]))
