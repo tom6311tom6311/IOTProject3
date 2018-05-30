@@ -8,5 +8,5 @@ img_idx = 0
 camera = PiCamera()
 
 while 1:
-  camera.capture(str(img_idx) + '.jpg')
+  camera.capture(imgs_dir + '/' + str(img_idx) + '.jpg')
   sleep(5)
